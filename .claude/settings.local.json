@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem C:\\\\Users\\\\kpereira1\\\\docusign-api -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Format-Table FullName, LastWriteTime -AutoSize)"
+    ]
+  }
+}
