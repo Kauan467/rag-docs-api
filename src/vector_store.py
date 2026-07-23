@@ -1,15 +1,14 @@
 from pinecone import Pinecone
 from src.config import settings
 
-pc = Pinecone(api_key=settings.pinecone_api_key)
-index = pc.Index(settings.pinecone_index_name)
+
+def get_index():
+    pc = Pinecone(api_key=settings.pinecone_api_key)
+    return pc.Index(settings.pinecone_index_name)
 
 
 def upsert_chunks(chunks_with_embeddings: list[dict]) -> int:
-    """
-    Salva chunks com embeddings no Pinecone.
-    Retorna quantidade de vetores inseridos.
-    """
+    index = get_index()
     vectors = []
 
     for chunk in chunks_with_embeddings:
@@ -32,10 +31,7 @@ def upsert_chunks(chunks_with_embeddings: list[dict]) -> int:
 
 
 def search_similar(query_embedding: list[float], top_k: int = None) -> list[dict]:
-    """
-    Busca os chunks mais similares à query.
-    Retorna lista de dicts com texto, fonte, página e score.
-    """
+    index = get_index()
     k = top_k or settings.top_k_results
 
     results = index.query(
@@ -57,6 +53,5 @@ def search_similar(query_embedding: list[float], top_k: int = None) -> list[dict
 
 
 def delete_document(source_name: str) -> None:
-    """Remove todos os chunks de um documento pelo nome do arquivo."""
-    index.delete(filter={"source": {"$eq": source_name}})
-    
+    index = get_index()
+    index.delete(filter={"source": {"``$``eq": source_name}})
